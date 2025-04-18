@@ -15,6 +15,7 @@ check_counter =[]
 # ---------------------------- TIMER RESET ------------------------------- #
 def timer_reset():
     global reps
+    check_counter.clear()
     reps = 0
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
