@@ -9,12 +9,37 @@ FONT_NAME = "Courier"
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
+reps = 0
+check_counter =[]
 
 # ---------------------------- TIMER RESET ------------------------------- #
+def timer_reset():
+    global reps
+    reps = 0
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
-    count_down(5*60)
+    global reps
+    reps +=1
+    work_sec = WORK_MIN*60
+    short_break_sec = SHORT_BREAK_MIN*60
+    long_break_sec = LONG_BREAK_MIN*60
+
+    if reps == 1 or reps == 3 or reps == 5 or reps == 7:
+        timer_label.config(text='Work', font=(FONT_NAME, 30, 'bold'))
+        count_down(work_sec)
+        check_counter.append('✔')
+    elif reps == 2 or reps == 4 or reps == 6:
+        check_mark.config(text=''.join(check_counter), font=(FONT_NAME, 10, 'bold'))
+        timer_label.config(text='Rest', font=(FONT_NAME, 30, 'bold'))
+        count_down(short_break_sec)
+    elif reps == 8:
+        check_mark.config(text=''.join(check_counter), font=(FONT_NAME, 10, 'bold'))
+        timer_label.config(text='Rest', font=(FONT_NAME, 30, 'bold'))
+        count_down(long_break_sec)
+    else:
+        check_counter.clear()
+        timer_reset()
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
@@ -26,6 +51,8 @@ def count_down(count):
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
         window.after(1000, count_down, count-1)
+    if count == 0:
+        start_timer()
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -49,7 +76,7 @@ start_button.grid(column=0,row=2)
 reset_button = tkinter.Button(text='Reset')
 reset_button.grid(column=2,row=2)
 
-check_mark = tkinter.Label(text='✔', font=(FONT_NAME,10,'bold'))
+check_mark = tkinter.Label(text=''.join(check_counter), font=(FONT_NAME,10,'bold'))
 check_mark.config(fg=GREEN,bg=YELLOW)
 check_mark.grid(column=1,row=3)
 
